@@ -1,0 +1,31 @@
+{
+  "name": "scrapper",
+  "version": "1.0.0",
+  "description": "web crawler made in node",
+  "main": "src/spider.ts",
+  "scripts": {
+    "test": "jest",
+    "start": "node src/spider",
+    "dev": "nodemon src/spider",
+    "lint": "tslint -p tsconfig.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/osedoe/node-scrapper.git"
+  },
+  "author": "jose diaz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/osedoe/node-scrapper/issues"
+  },
+  "homepage": "https://github.com/osedoe/node-scrapper#readme",
+  "devDependencies": {
+    "@types/node": "^10.12.8",
+    "jest": "^23.6.0",
+    "nodemon": "^1.18.6",
+    "tslint": "^5.11.0",
+    "typescript": "^3.1.6",
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2"
+  }
+}
