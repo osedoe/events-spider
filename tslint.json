@@ -59,6 +59,7 @@
         "@src",
         "rxjs"
       ],
+      "no-var-requires": false,
       "no-this-assignment": [
         true,
         {
