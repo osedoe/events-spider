@@ -33,7 +33,11 @@ app.get('/scrape', (req, res) => {
             .text();
           events[index] = title;
         });
-      // TODO: Implement DOM traversal of description, location and date-time
+
+      // TODO: Implement:
+      // DOM traversal of description,
+      // location
+      // and date - time
     }
     const filePath = `output.json`;
     const fileText = JSON.stringify(events);
@@ -41,16 +45,21 @@ app.get('/scrape', (req, res) => {
       return new Promise((resolve, reject) => {
         fs.writeFile('output.json', JSON.stringify(events), err => {
           if (err) {
+            console.log(
+              `Can't write on 'output.json', try removing the fire from the project folder'`
+            );
             return reject(err);
           }
-          resolve(
+          console.log(
             'File successfully written! - Check your project directory for output.json!'
           );
+          return resolve(fileText);
         });
       });
     }
     populateJSON(fileText);
   });
+  res.redirect('https://josedg.com');
 });
 
 app.listen(port, () => console.log(`Spider leyendo en ${port}`));
