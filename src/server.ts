@@ -21,12 +21,8 @@ app.get('/scrape', (req, res) => {
       const $ = cheerio.load(html);
 
       events = {};
-      // description: '',
-      // rating: ''
-      // let { title, description, rating } = json;
 
       // Get the title
-
       $('body')
         .find('h4.title')
         .each(function(index) {
@@ -35,43 +31,25 @@ app.get('/scrape', (req, res) => {
             .children()
             .first()
             .text();
-
           events[index] = title;
         });
-
-      // .filter(function() {
-      //   const data = $(this);
-      //   json.title = data.text();
-      //   title = json.title;
-      // });
-
-      // Get description
-      // $('.summary_text')
-      //   .first()
-      //   .filter(function() {
-      //     const data = $(this);
-      //     json.description = data.text();
-      //     description = json.description;
-      //   });
-
-      // // Get the rating
-      // $('.ratingValue').filter(function() {
-      //   const data = $(this);
-      //   json.rating = data
-      //     .children()
-      //     .first()
-      //     .children()
-      //     .first()
-      //     .text();
-      //   rating = json.rating;
-      // });
+      // TODO: Implement DOM traversal of description, location and date-time
     }
-    console.log(events);
-    fs.writeFile('output.json', events, err => {
-      console.log(
-        'File successfully written! - Check your project directory for output.json!'
-      );
-    });
+    const filePath = `output.json`;
+    const fileText = JSON.stringify(events);
+    function populateJSON(fileContent) {
+      return new Promise((resolve, reject) => {
+        fs.writeFile('output.json', JSON.stringify(events), err => {
+          if (err) {
+            return reject(err);
+          }
+          resolve(
+            'File successfully written! - Check your project directory for output.json!'
+          );
+        });
+      });
+    }
+    populateJSON(fileText);
   });
 });
 
