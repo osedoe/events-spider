@@ -1,6 +1,6 @@
 const express = require('express');
 const request = require('request');
-const cheerio = require('cheerio');
+// import cheerio = require('cheerio');
 const app     = express();
 const port = 3000;
 app.use(express.json());
@@ -15,12 +15,19 @@ app.get('/scrape', (req, res) => {
     // Check for errorrs IN THE REQUEST
     if (!error) {
       const $ = cheerio.load(html);
+
       let json = {
         title: '',
         release: '',
         rating: ''
       };
       let { title, release, rating } = json;
+      $('.header').filter(function(element) {
+        const data = $(this);
+        title = data.children().first().text();
+        console.log(json);
+        json.title = title;
+      });
     }
   });
 });

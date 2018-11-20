@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/osedoe/node-scrapper#readme",
   "devDependencies": {
+    "@types/cheerio": "^0.22.9",
     "@types/node": "^10.12.9",
     "jest": "^23.6.0",
     "nodemon": "^1.18.6",

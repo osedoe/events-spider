@@ -49,7 +49,7 @@
         "ignore-properties"
       ],
       "no-invalid-this": [
-        true,
+        false,
         "check-function-in-method"
       ],
       "no-null-keyword": false,
@@ -61,7 +61,7 @@
       ],
       "no-var-requires": false,
       "no-this-assignment": [
-        true,
+        false,
         {
           "allow-destructuring": true
         }
