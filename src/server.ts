@@ -1,11 +1,13 @@
 const express = require('express');
 const fs = require('fs');
 const request = require('request');
-// import cheerio = require('cheerio');
+const cheerio = require('cheerio');
 const app = express();
 const port = 3000;
 
 app.use(express.json());
+
+let json;
 
 app.get('/scrape', (req, res) => {
   // Things to scrap
@@ -18,51 +20,49 @@ app.get('/scrape', (req, res) => {
     if (!error) {
       const $ = cheerio.load(html);
 
-      const json = {
+      json = {
         title: '',
-        release: '',
+        description: '',
         rating: ''
       };
-      let { title, release, rating } = json;
+      let { title, description, rating } = json;
 
-      // Get the title and the relase date
-      $('.header').filter(function() {
+      // Get the title
+      $('h1').filter(function() {
         const data = $(this);
-        title = data
+        json.title = data.text();
+        title = json.title;
+      });
+
+      // Get description
+      $('.summary_text')
+        .first()
+        .filter(function() {
+          const data = $(this);
+          json.description = data.text();
+          description = json.description;
+        });
+
+      // Get the rating
+      $('.ratingValue').filter(function() {
+        const data = $(this);
+        json.rating = data
+          .children()
+          .first()
           .children()
           .first()
           .text();
-
-        release = data
-          .children()
-          .last()
-          .children()
-          .text();
-
-        json.title = title;
-        json.release = release;
-        return true;
-      });
-
-      // Get the rating
-      $('star-box-giga-star').filter(function() {
-        const data = $(this);
-        rating = data.text();
-        json.rating = rating;
-        return true;
+        rating = json.rating;
       });
     }
 
-    fs.writeFile(
-      'output.json', JSON.stringify()
-      JSON.stringify(json, null, 4), err => {
-        console.log(
-          'File successfully written! - Check your project directory for output.json!'
-        );
-      });
-    );
+    fs.writeFile('output.json', JSON.stringify(json, null, 4), err => {
+      console.log(
+        'File successfully written! - Check your project directory for output.json!'
+      );
+    });
   });
-})
+});
 
 app.listen(port, () => console.log(`Scrapper levantado en ${port}`));
 
