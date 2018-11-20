@@ -7,12 +7,12 @@ const port = 3000;
 
 app.use(express.json());
 
-let json;
+let events;
 
 app.get('/scrape', (req, res) => {
   // Things to scrap
   // Be careful with the url, this is an example
-  const url = 'http://www.imdb.com/title/tt1229340/';
+  const url = 'https://lagenda.org/';
 
   // Request call
   request(url, (error, response, html) => {
@@ -20,43 +20,54 @@ app.get('/scrape', (req, res) => {
     if (!error) {
       const $ = cheerio.load(html);
 
-      json = {
-        title: '',
-        description: '',
-        rating: ''
-      };
-      let { title, description, rating } = json;
+      events = {};
+      // description: '',
+      // rating: ''
+      // let { title, description, rating } = json;
 
       // Get the title
-      $('h1').filter(function() {
-        const data = $(this);
-        json.title = data.text();
-        title = json.title;
-      });
 
-      // Get description
-      $('.summary_text')
-        .first()
-        .filter(function() {
+      $('body')
+        .find('h4.title')
+        .each(function(index) {
           const data = $(this);
-          json.description = data.text();
-          description = json.description;
+          const title = data
+            .children()
+            .first()
+            .text();
+
+          events[index] = title;
         });
 
-      // Get the rating
-      $('.ratingValue').filter(function() {
-        const data = $(this);
-        json.rating = data
-          .children()
-          .first()
-          .children()
-          .first()
-          .text();
-        rating = json.rating;
-      });
-    }
+      // .filter(function() {
+      //   const data = $(this);
+      //   json.title = data.text();
+      //   title = json.title;
+      // });
 
-    fs.writeFile('output.json', JSON.stringify(json, null, 4), err => {
+      // Get description
+      // $('.summary_text')
+      //   .first()
+      //   .filter(function() {
+      //     const data = $(this);
+      //     json.description = data.text();
+      //     description = json.description;
+      //   });
+
+      // // Get the rating
+      // $('.ratingValue').filter(function() {
+      //   const data = $(this);
+      //   json.rating = data
+      //     .children()
+      //     .first()
+      //     .children()
+      //     .first()
+      //     .text();
+      //   rating = json.rating;
+      // });
+    }
+    console.log(events);
+    fs.writeFile('output.json', events, err => {
       console.log(
         'File successfully written! - Check your project directory for output.json!'
       );
@@ -64,6 +75,6 @@ app.get('/scrape', (req, res) => {
   });
 });
 
-app.listen(port, () => console.log(`Scrapper levantado en ${port}`));
+app.listen(port, () => console.log(`Spider leyendo en ${port}`));
 
 exports = module.exports = app;
