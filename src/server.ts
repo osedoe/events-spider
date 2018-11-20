@@ -1,8 +1,10 @@
 const express = require('express');
+const fs = require('fs');
 const request = require('request');
 // import cheerio = require('cheerio');
-const app     = express();
+const app = express();
 const port = 3000;
+
 app.use(express.json());
 
 app.get('/scrape', (req, res) => {
@@ -16,21 +18,51 @@ app.get('/scrape', (req, res) => {
     if (!error) {
       const $ = cheerio.load(html);
 
-      let json = {
+      const json = {
         title: '',
         release: '',
         rating: ''
       };
       let { title, release, rating } = json;
-      $('.header').filter(function(element) {
+
+      // Get the title and the relase date
+      $('.header').filter(function() {
         const data = $(this);
-        title = data.children().first().text();
-        console.log(json);
+        title = data
+          .children()
+          .first()
+          .text();
+
+        release = data
+          .children()
+          .last()
+          .children()
+          .text();
+
         json.title = title;
+        json.release = release;
+        return true;
+      });
+
+      // Get the rating
+      $('star-box-giga-star').filter(function() {
+        const data = $(this);
+        rating = data.text();
+        json.rating = rating;
+        return true;
       });
     }
+
+    fs.writeFile(
+      'output.json', JSON.stringify()
+      JSON.stringify(json, null, 4), err => {
+        console.log(
+          'File successfully written! - Check your project directory for output.json!'
+        );
+      });
+    );
   });
-});
+})
 
 app.listen(port, () => console.log(`Scrapper levantado en ${port}`));
 
